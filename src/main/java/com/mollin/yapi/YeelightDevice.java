@@ -8,6 +8,8 @@ import com.mollin.yapi.socket.YeelightSocketHolder;
 import static com.mollin.yapi.utils.YeelightUtils.clamp;
 
 public class YeelightDevice {
+    private static String DEFAULT_EFFECT = "smooth";
+    private static int DEFAULT_DURATION = 500;
     private YeelightSocketHolder socketHolder;
 
     public YeelightDevice(String ip, int port) {
@@ -38,7 +40,50 @@ public class YeelightDevice {
         g = clamp(g, 0, 255);
         b = clamp(b, 0, 255);
         int rgbValue = r * 65536 + g * 256 + b;
-        YeelightCommand command = new YeelightCommand("set_rgb", rgbValue);
+        YeelightCommand command = new YeelightCommand("set_rgb", rgbValue, DEFAULT_EFFECT, DEFAULT_DURATION);
+        return this.sendCommand(command);
+    }
+
+    public boolean setColorTemperature(int colorTemp) {
+        colorTemp = clamp(colorTemp, 1700, 6500);
+        YeelightCommand command = new YeelightCommand("set_ct_abx", colorTemp, DEFAULT_EFFECT, DEFAULT_DURATION);
+        return this.sendCommand(command);
+    }
+
+    public boolean setHSV(int hue, int sat) {
+        hue = clamp(hue, 0, 359);
+        sat = clamp(sat, 0, 100);
+        YeelightCommand command = new YeelightCommand("set_hsv", hue, sat, DEFAULT_EFFECT, DEFAULT_DURATION);
+        return this.sendCommand(command);
+    }
+
+    public boolean setBrightness(int brightness) {
+        brightness = clamp(brightness, 1, 100);
+        YeelightCommand command = new YeelightCommand("set_bright", brightness, DEFAULT_EFFECT, DEFAULT_DURATION);
+        return this.sendCommand(command);
+    }
+
+    public boolean setPower(boolean power) {
+        String powerStr = power ? "on" : "off";
+        YeelightCommand command = new YeelightCommand("set_power", powerStr);
+        return this.sendCommand(command);
+    }
+
+    public boolean toggle() {
+        YeelightCommand command = new YeelightCommand("toggle");
+        return this.sendCommand(command);
+    }
+
+    public boolean setDefault() {
+        YeelightCommand command = new YeelightCommand("set_default");
+        return this.sendCommand(command);
+    }
+
+    public boolean setName(String name) {
+        if (name == null) {
+            name = "";
+        }
+        YeelightCommand command = new YeelightCommand("set_name", name);
         return this.sendCommand(command);
     }
 }
