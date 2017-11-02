@@ -1,6 +1,7 @@
 package com.mollin.yapi;
 
 import com.mollin.yapi.command.YeelightCommand;
+import com.mollin.yapi.result.YeelightResult;
 import com.mollin.yapi.socket.YeelightSocketException;
 import com.mollin.yapi.socket.YeelightSocketHolder;
 
@@ -13,11 +14,20 @@ public class YeelightDevice {
         this.socketHolder = new YeelightSocketHolder(ip, port);
     }
 
+    private YeelightResult readUntilResult(YeelightCommand command) {
+        YeelightResult result;
+        do {
+            result = YeelightResult.from(this.socketHolder.readLine());
+        } while (!result.idEquals(command.getId()));
+        return result;
+    }
+
     private boolean sendCommand(YeelightCommand command) {
         String jsonCommand = command.toJson() + "\r\n";
         try {
             this.socketHolder.send(jsonCommand);
-            return true;
+            YeelightResult result = this.readUntilResult(command);
+            return !result.isError();
         } catch (YeelightSocketException e) {
             return false;
         }

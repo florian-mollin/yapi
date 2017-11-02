@@ -41,4 +41,12 @@ public class YeelightSocketHolder {
             throw new YeelightSocketException(e);
         }
     }
+
+    public String readLine() {
+        try {
+            return this.socketReader.readLine();
+        } catch (Exception e) {
+            throw new YeelightSocketException(e);
+        }
+    }
 }

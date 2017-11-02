@@ -25,6 +25,10 @@ public class YeelightCommand {
         this.params = params;
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     public String toJson() {
         return YeelightCommand.GSON.toJson(this);
     }
