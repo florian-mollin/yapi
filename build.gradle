@@ -14,10 +14,12 @@ ext {
     JUNIT_V = '4.12'
     JUNIT_PARAMS_V = '1.1.0'
     ASSERTJ_V = '3.8.0'
+    TINYLOG_V = '1.2'
 }
 
 dependencies {
     compile "com.google.code.gson:gson:$GSON_V"
+    compile "org.tinylog:tinylog:$TINYLOG_V"
     testCompile "junit:junit:$JUNIT_V"
     testCompile "pl.pragmatists:JUnitParams:$JUNIT_PARAMS_V"
     testCompile "org.assertj:assertj-core:$ASSERTJ_V"

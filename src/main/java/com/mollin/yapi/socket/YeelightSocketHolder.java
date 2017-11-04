@@ -1,5 +1,7 @@
 package com.mollin.yapi.socket;
 
+import org.pmw.tinylog.Logger;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -35,6 +37,7 @@ public class YeelightSocketHolder {
 
     public void send(String datas) {
         try {
+            Logger.debug("{} sent to {}:{}", datas, this.ip, this.port);
             this.socketWriter.write(datas);
             this.socketWriter.flush();
         } catch (Exception e) {
@@ -44,7 +47,9 @@ public class YeelightSocketHolder {
 
     public String readLine() {
         try {
-            return this.socketReader.readLine();
+            String datas = this.socketReader.readLine();
+            Logger.debug("{} received from {}:{}", datas, this.ip, this.port);
+            return datas;
         } catch (Exception e) {
             throw new YeelightSocketException(e);
         }
