@@ -1,6 +1,8 @@
 package com.mollin.yapi;
 
 import com.mollin.yapi.command.YeelightCommand;
+import com.mollin.yapi.enumeration.YeelightAdjustAction;
+import com.mollin.yapi.enumeration.YeelightAdjustProperty;
 import com.mollin.yapi.exception.YeelightResultErrorException;
 import com.mollin.yapi.result.YeelightResultError;
 import com.mollin.yapi.result.YeelightResultOk;
@@ -80,6 +82,13 @@ public class YeelightDevice {
 
     public void setDefault() throws YeelightResultErrorException, YeelightSocketException {
         YeelightCommand command = new YeelightCommand("set_default");
+        this.sendCommand(command);
+    }
+
+    public void setAdjust(YeelightAdjustProperty property, YeelightAdjustAction action) throws YeelightResultErrorException, YeelightSocketException {
+        String actionValue = action == null ? "" : action.getValue();
+        String propertyValue = property == null ? "" : property.getValue();
+        YeelightCommand command = new YeelightCommand("set_adjust", actionValue, propertyValue);
         this.sendCommand(command);
     }
 
