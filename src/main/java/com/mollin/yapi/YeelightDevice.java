@@ -71,7 +71,7 @@ public class YeelightDevice {
 
     public void setPower(boolean power) throws YeelightResultErrorException, YeelightSocketException {
         String powerStr = power ? "on" : "off";
-        YeelightCommand command = new YeelightCommand("set_power", powerStr);
+        YeelightCommand command = new YeelightCommand("set_power", powerStr, DEFAULT_EFFECT, DEFAULT_DURATION);
         this.sendCommand(command);
     }
 
