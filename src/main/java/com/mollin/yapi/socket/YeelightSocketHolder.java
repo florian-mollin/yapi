@@ -1,5 +1,6 @@
 package com.mollin.yapi.socket;
 
+import com.mollin.yapi.exception.YeelightSocketException;
 import org.pmw.tinylog.Logger;
 
 import java.io.BufferedReader;
@@ -17,17 +18,18 @@ public class YeelightSocketHolder {
     private BufferedReader socketReader;
     private BufferedWriter socketWriter;
 
-    public YeelightSocketHolder(String ip, int port) {
+    public YeelightSocketHolder(String ip, int port) throws YeelightSocketException {
         this.ip = ip;
         this.port = port;
         this.initSocketAndStreams();
     }
 
-    private void initSocketAndStreams() {
+    private void initSocketAndStreams() throws YeelightSocketException {
         try {
             InetSocketAddress inetSocketAddress = new InetSocketAddress(ip, port);
             this.socket = new Socket();
             this.socket.connect(inetSocketAddress, YeelightSocketHolder.SOCKET_TIMEOUT);
+            this.socket.setSoTimeout(SOCKET_TIMEOUT);
             this.socketReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
             this.socketWriter = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
         } catch (Exception e) {
@@ -35,7 +37,7 @@ public class YeelightSocketHolder {
         }
     }
 
-    public void send(String datas) {
+    public void send(String datas) throws YeelightSocketException {
         try {
             Logger.debug("{} sent to {}:{}", datas, this.ip, this.port);
             this.socketWriter.write(datas);
@@ -45,7 +47,7 @@ public class YeelightSocketHolder {
         }
     }
 
-    public String readLine() {
+    public String readLine() throws YeelightSocketException {
         try {
             String datas = this.socketReader.readLine();
             Logger.debug("{} received from {}:{}", datas, this.ip, this.port);

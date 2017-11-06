@@ -1,89 +1,93 @@
 package com.mollin.yapi;
 
 import com.mollin.yapi.command.YeelightCommand;
-import com.mollin.yapi.result.YeelightResult;
-import com.mollin.yapi.socket.YeelightSocketException;
+import com.mollin.yapi.exception.YeelightResultErrorException;
+import com.mollin.yapi.result.YeelightResultError;
+import com.mollin.yapi.result.YeelightResultOk;
+import com.mollin.yapi.exception.YeelightSocketException;
 import com.mollin.yapi.socket.YeelightSocketHolder;
+
+import java.util.Optional;
 
 import static com.mollin.yapi.utils.YeelightUtils.clamp;
 
 public class YeelightDevice {
-    private static String DEFAULT_EFFECT = "smooth";
-    private static int DEFAULT_DURATION = 500;
-    private YeelightSocketHolder socketHolder;
+    private static final String DEFAULT_EFFECT = "smooth";
+    private static final int DEFAULT_DURATION = 500;
+    private final YeelightSocketHolder socketHolder;
 
-    public YeelightDevice(String ip, int port) {
+    public YeelightDevice(String ip, int port) throws YeelightSocketException {
         this.socketHolder = new YeelightSocketHolder(ip, port);
     }
 
-    private YeelightResult readUntilResult(YeelightCommand command) {
-        YeelightResult result;
+    private void readUntilResult(int id) throws YeelightSocketException, YeelightResultErrorException {
         do {
-            result = YeelightResult.from(this.socketHolder.readLine());
-        } while (!result.idEquals(command.getId()));
-        return result;
+            String datas = this.socketHolder.readLine();
+            Optional<YeelightResultOk> okResult = YeelightResultOk.from(datas);
+            Optional<YeelightResultError> errorResult = YeelightResultError.from(datas);
+            if (okResult.isPresent() && okResult.get().getId() == id) {
+                return;
+            } else if (errorResult.isPresent() && errorResult.get().getId() == id) {
+                throw errorResult.get().getException();
+            }
+        } while (true);
     }
 
-    private boolean sendCommand(YeelightCommand command) {
+    private void sendCommand(YeelightCommand command) throws YeelightSocketException, YeelightResultErrorException {
         String jsonCommand = command.toJson() + "\r\n";
-        try {
-            this.socketHolder.send(jsonCommand);
-            YeelightResult result = this.readUntilResult(command);
-            return !result.isError();
-        } catch (YeelightSocketException e) {
-            return false;
-        }
+        this.socketHolder.send(jsonCommand);
+        this.readUntilResult(command.getId());
     }
 
-    public boolean setRGB(int r, int g, int b) {
+    public void setRGB(int r, int g, int b) throws YeelightResultErrorException, YeelightSocketException {
         r = clamp(r, 0, 255);
         g = clamp(g, 0, 255);
         b = clamp(b, 0, 255);
         int rgbValue = r * 65536 + g * 256 + b;
         YeelightCommand command = new YeelightCommand("set_rgb", rgbValue, DEFAULT_EFFECT, DEFAULT_DURATION);
-        return this.sendCommand(command);
+        this.sendCommand(command);
     }
 
-    public boolean setColorTemperature(int colorTemp) {
+    public void setColorTemperature(int colorTemp) throws YeelightResultErrorException, YeelightSocketException {
         colorTemp = clamp(colorTemp, 1700, 6500);
         YeelightCommand command = new YeelightCommand("set_ct_abx", colorTemp, DEFAULT_EFFECT, DEFAULT_DURATION);
-        return this.sendCommand(command);
+        this.sendCommand(command);
     }
 
-    public boolean setHSV(int hue, int sat) {
+    public void setHSV(int hue, int sat) throws YeelightResultErrorException, YeelightSocketException {
         hue = clamp(hue, 0, 359);
         sat = clamp(sat, 0, 100);
         YeelightCommand command = new YeelightCommand("set_hsv", hue, sat, DEFAULT_EFFECT, DEFAULT_DURATION);
-        return this.sendCommand(command);
+        this.sendCommand(command);
     }
 
-    public boolean setBrightness(int brightness) {
+    public void setBrightness(int brightness) throws YeelightResultErrorException, YeelightSocketException {
         brightness = clamp(brightness, 1, 100);
         YeelightCommand command = new YeelightCommand("set_bright", brightness, DEFAULT_EFFECT, DEFAULT_DURATION);
-        return this.sendCommand(command);
+        this.sendCommand(command);
     }
 
-    public boolean setPower(boolean power) {
+    public void setPower(boolean power) throws YeelightResultErrorException, YeelightSocketException {
         String powerStr = power ? "on" : "off";
         YeelightCommand command = new YeelightCommand("set_power", powerStr);
-        return this.sendCommand(command);
+        this.sendCommand(command);
     }
 
-    public boolean toggle() {
+    public void toggle() throws YeelightResultErrorException, YeelightSocketException {
         YeelightCommand command = new YeelightCommand("toggle");
-        return this.sendCommand(command);
+        this.sendCommand(command);
     }
 
-    public boolean setDefault() {
+    public void setDefault() throws YeelightResultErrorException, YeelightSocketException {
         YeelightCommand command = new YeelightCommand("set_default");
-        return this.sendCommand(command);
+        this.sendCommand(command);
     }
 
-    public boolean setName(String name) {
+    public void setName(String name) throws YeelightResultErrorException, YeelightSocketException {
         if (name == null) {
             name = "";
         }
         YeelightCommand command = new YeelightCommand("set_name", name);
-        return this.sendCommand(command);
+        this.sendCommand(command);
     }
 }
