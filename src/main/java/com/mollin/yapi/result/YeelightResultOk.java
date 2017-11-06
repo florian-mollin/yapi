@@ -23,4 +23,8 @@ public class YeelightResultOk {
     public int getId() {
         return this.id;
     }
+
+    public String[] getResult() {
+        return this.result;
+    }
 }

@@ -3,13 +3,17 @@ package com.mollin.yapi;
 import com.mollin.yapi.command.YeelightCommand;
 import com.mollin.yapi.enumeration.YeelightAdjustAction;
 import com.mollin.yapi.enumeration.YeelightAdjustProperty;
+import com.mollin.yapi.enumeration.YeelightProperty;
 import com.mollin.yapi.exception.YeelightResultErrorException;
 import com.mollin.yapi.result.YeelightResultError;
 import com.mollin.yapi.result.YeelightResultOk;
 import com.mollin.yapi.exception.YeelightSocketException;
 import com.mollin.yapi.socket.YeelightSocketHolder;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.mollin.yapi.utils.YeelightUtils.clamp;
 
@@ -22,23 +26,35 @@ public class YeelightDevice {
         this.socketHolder = new YeelightSocketHolder(ip, port);
     }
 
-    private void readUntilResult(int id) throws YeelightSocketException, YeelightResultErrorException {
+    private String[] readUntilResult(int id) throws YeelightSocketException, YeelightResultErrorException {
         do {
             String datas = this.socketHolder.readLine();
             Optional<YeelightResultOk> okResult = YeelightResultOk.from(datas);
             Optional<YeelightResultError> errorResult = YeelightResultError.from(datas);
             if (okResult.isPresent() && okResult.get().getId() == id) {
-                return;
+                return okResult.get().getResult();
             } else if (errorResult.isPresent() && errorResult.get().getId() == id) {
                 throw errorResult.get().getException();
             }
         } while (true);
     }
 
-    private void sendCommand(YeelightCommand command) throws YeelightSocketException, YeelightResultErrorException {
+    private String[] sendCommand(YeelightCommand command) throws YeelightSocketException, YeelightResultErrorException {
         String jsonCommand = command.toJson() + "\r\n";
         this.socketHolder.send(jsonCommand);
-        this.readUntilResult(command.getId());
+        return this.readUntilResult(command.getId());
+    }
+
+    public Map<YeelightProperty, String> getProperties(YeelightProperty... properties) throws YeelightResultErrorException, YeelightSocketException {
+        YeelightProperty[] expectedProperties = properties.length == 0 ? YeelightProperty.values() : properties;
+        Object[] expectedPropertiesValues = Stream.of(expectedProperties).map(YeelightProperty::getValue).toArray();
+        YeelightCommand command = new YeelightCommand("get_prop", expectedPropertiesValues);
+        String[] result = this.sendCommand(command);
+        Map<YeelightProperty, String> propertyToValueMap = new HashMap<>();
+        for (int i = 0; i < expectedProperties.length; i++) {
+            propertyToValueMap.put(expectedProperties[i], result[i]);
+        }
+        return propertyToValueMap;
     }
 
     public void setRGB(int r, int g, int b) throws YeelightResultErrorException, YeelightSocketException {
