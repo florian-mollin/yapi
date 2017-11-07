@@ -3,6 +3,7 @@ package com.mollin.yapi;
 import com.mollin.yapi.command.YeelightCommand;
 import com.mollin.yapi.enumeration.YeelightAdjustAction;
 import com.mollin.yapi.enumeration.YeelightAdjustProperty;
+import com.mollin.yapi.enumeration.YeelightEffect;
 import com.mollin.yapi.enumeration.YeelightProperty;
 import com.mollin.yapi.exception.YeelightResultErrorException;
 import com.mollin.yapi.result.YeelightResultError;
@@ -18,12 +19,30 @@ import java.util.stream.Stream;
 import static com.mollin.yapi.utils.YeelightUtils.clamp;
 
 public class YeelightDevice {
-    private static final String DEFAULT_EFFECT = "smooth";
-    private static final int DEFAULT_DURATION = 500;
     private final YeelightSocketHolder socketHolder;
+    private YeelightEffect effect;
+    private int duration;
+
+    public YeelightDevice(String ip, int port, YeelightEffect effect, int duration) throws YeelightSocketException {
+        this.socketHolder = new YeelightSocketHolder(ip, port);
+        this.setEffect(effect);
+        this.setDuration(duration);
+    }
 
     public YeelightDevice(String ip, int port) throws YeelightSocketException {
-        this.socketHolder = new YeelightSocketHolder(ip, port);
+        this(ip, port, YeelightEffect.SUDDEN, 0);
+    }
+
+    public YeelightDevice(String ip) throws YeelightSocketException {
+        this(ip, 55443);
+    }
+
+    public void setEffect(YeelightEffect effect) {
+        this.effect = effect == null ? YeelightEffect.SUDDEN : effect;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = Math.max(0, duration);
     }
 
     private String[] readUntilResult(int id) throws YeelightSocketException, YeelightResultErrorException {
@@ -62,32 +81,32 @@ public class YeelightDevice {
         g = clamp(g, 0, 255);
         b = clamp(b, 0, 255);
         int rgbValue = r * 65536 + g * 256 + b;
-        YeelightCommand command = new YeelightCommand("set_rgb", rgbValue, DEFAULT_EFFECT, DEFAULT_DURATION);
+        YeelightCommand command = new YeelightCommand("set_rgb", rgbValue, this.effect.getValue(), this.duration);
         this.sendCommand(command);
     }
 
     public void setColorTemperature(int colorTemp) throws YeelightResultErrorException, YeelightSocketException {
         colorTemp = clamp(colorTemp, 1700, 6500);
-        YeelightCommand command = new YeelightCommand("set_ct_abx", colorTemp, DEFAULT_EFFECT, DEFAULT_DURATION);
+        YeelightCommand command = new YeelightCommand("set_ct_abx", colorTemp, this.effect.getValue(), this.duration);
         this.sendCommand(command);
     }
 
     public void setHSV(int hue, int sat) throws YeelightResultErrorException, YeelightSocketException {
         hue = clamp(hue, 0, 359);
         sat = clamp(sat, 0, 100);
-        YeelightCommand command = new YeelightCommand("set_hsv", hue, sat, DEFAULT_EFFECT, DEFAULT_DURATION);
+        YeelightCommand command = new YeelightCommand("set_hsv", hue, sat, this.effect.getValue(), this.duration);
         this.sendCommand(command);
     }
 
     public void setBrightness(int brightness) throws YeelightResultErrorException, YeelightSocketException {
         brightness = clamp(brightness, 1, 100);
-        YeelightCommand command = new YeelightCommand("set_bright", brightness, DEFAULT_EFFECT, DEFAULT_DURATION);
+        YeelightCommand command = new YeelightCommand("set_bright", brightness, this.effect.getValue(), this.duration);
         this.sendCommand(command);
     }
 
     public void setPower(boolean power) throws YeelightResultErrorException, YeelightSocketException {
         String powerStr = power ? "on" : "off";
-        YeelightCommand command = new YeelightCommand("set_power", powerStr, DEFAULT_EFFECT, DEFAULT_DURATION);
+        YeelightCommand command = new YeelightCommand("set_power", powerStr, this.effect.getValue(), this.duration);
         this.sendCommand(command);
     }
 
