@@ -101,6 +101,25 @@ public class YeelightDevice {
         this.sendCommand(command);
     }
 
+    public void addCron(int delay) throws YeelightResultErrorException, YeelightSocketException {
+        YeelightCommand command = new YeelightCommand("cron_add", 0, delay);
+        this.sendCommand(command);
+    }
+
+    public int getCronDelay() throws YeelightResultErrorException, YeelightSocketException {
+        Map<YeelightProperty, String> propertyToString = this.getProperties(YeelightProperty.DELAY_OFF);
+        try {
+            return Integer.parseInt(propertyToString.get(YeelightProperty.DELAY_OFF));
+        } catch (Exception ex) {
+            return 0;
+        }
+    }
+
+    public void deleteCron() throws YeelightResultErrorException, YeelightSocketException {
+        YeelightCommand command = new YeelightCommand("cron_del", 0);
+        this.sendCommand(command);
+    }
+
     public void setAdjust(YeelightAdjustProperty property, YeelightAdjustAction action) throws YeelightResultErrorException, YeelightSocketException {
         String actionValue = action == null ? "" : action.getValue();
         String propertyValue = property == null ? "" : property.getValue();
