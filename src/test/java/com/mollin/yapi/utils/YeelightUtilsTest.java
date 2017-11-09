@@ -7,6 +7,9 @@ import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Tester for utils class
+ */
 @RunWith(JUnitParamsRunner.class)
 public class YeelightUtilsTest {
     public Object[] parametersForClampTest() {
@@ -19,6 +22,13 @@ public class YeelightUtilsTest {
         };
     }
 
+    /**
+     * Clamp function test
+     * @param value Value to clamp
+     * @param min Min value
+     * @param max Max value
+     * @param expectedValue Expected value after the clamp
+     */
     @Test
     @Parameters
     public void clampTest(int value, int min, int max, int expectedValue) {

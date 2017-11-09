@@ -1,5 +1,8 @@
 package com.mollin.yapi.enumeration;
 
+/**
+ * Enumeration for all possible properties
+ */
 public enum YeelightProperty {
     POWER("power"),
     BRIGHTNESS("bright"),
@@ -24,12 +27,19 @@ public enum YeelightProperty {
     BG_SAT("bg_sat"),
     NL_BRIGHTNESS("nl_br");
 
+    /**
+     * Representation in request parameters
+     */
     private String value;
 
     YeelightProperty(String value) {
         this.value = value;
     }
 
+    /**
+     * Getter for value (ie. representation of property in request parameters)
+     * @return Value for property
+     */
     public String getValue() {
         return this.value;
     }
