@@ -265,14 +265,14 @@ public class YeelightDevice {
 
     /**
      * Adjust some parameters. (Main used by controllers)
-     * @param property Property to adjust
-     * @param action Direction of adjustment. For property {@link YeelightAdjustProperty#COLOR}, action can only be {@link YeelightAdjustAction#CIRCLE}
+     * @param property Property to adjust (if null, Circle chosen)
+     * @param action Direction of adjustment (if null, Color chose). For property {@link YeelightAdjustProperty#COLOR}, action can only be {@link YeelightAdjustAction#CIRCLE}
      * @throws YeelightResultErrorException when command result is an error
      * @throws YeelightSocketException when socket error occurs
      */
     public void setAdjust(YeelightAdjustProperty property, YeelightAdjustAction action) throws YeelightResultErrorException, YeelightSocketException {
-        String actionValue = action == null ? "" : action.getValue();
-        String propertyValue = property == null ? "" : property.getValue();
+        String actionValue = action == null ? YeelightAdjustAction.CIRCLE.getValue() : action.getValue();
+        String propertyValue = property == null ? YeelightAdjustProperty.COLOR.getValue() : property.getValue();
         YeelightCommand command = new YeelightCommand("set_adjust", actionValue, propertyValue);
         this.sendCommand(command);
     }

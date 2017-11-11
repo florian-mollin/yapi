@@ -15,6 +15,7 @@ ext {
     JUNIT_PARAMS_V = '1.1.0'
     ASSERTJ_V = '3.8.0'
     TINYLOG_V = '1.2'
+    POWERMOCK_V = '1.7.3'
 }
 
 dependencies {
@@ -23,4 +24,6 @@ dependencies {
     testCompile "junit:junit:$JUNIT_V"
     testCompile "pl.pragmatists:JUnitParams:$JUNIT_PARAMS_V"
     testCompile "org.assertj:assertj-core:$ASSERTJ_V"
+    testCompile "org.powermock:powermock-module-junit4:$POWERMOCK_V"
+    testCompile "org.powermock:powermock-api-mockito2:$POWERMOCK_V"
 }
