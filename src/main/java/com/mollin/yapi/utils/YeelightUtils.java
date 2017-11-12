@@ -3,8 +3,10 @@ package com.mollin.yapi.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Yeelight utility class
@@ -30,6 +32,30 @@ public class YeelightUtils {
      */
     public static int clamp(int value, int min, int max) {
         return Math.max(min, Math.min(max, value));
+    }
+
+    /**
+     * Clamp parameters 'r', 'g' and 'b' and then compute rgbValue
+     * @param r Red value
+     * @param g Green value
+     * @param b Blue value
+     * @return RGB value
+     */
+    public static int clampAndComputeRGBValue(int r, int g, int b) {
+        r = clamp(r, 0, 255);
+        g = clamp(g, 0, 255);
+        b = clamp(b, 0, 255);
+        return r * 65536 + g * 256 + b;
+    }
+
+    /**
+     * Return String with all integers from array, separated by delimiter
+     * @param delimiter Delimiter
+     * @param array Integers array
+     * @return String with all integers from array, separated by delimiter
+     */
+    public static String joinIntArray(String delimiter, int[] array) {
+        return Arrays.stream(array).mapToObj(String::valueOf).collect(Collectors.joining(delimiter));
     }
 
     /**

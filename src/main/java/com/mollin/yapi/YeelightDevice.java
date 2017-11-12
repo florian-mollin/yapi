@@ -6,6 +6,7 @@ import com.mollin.yapi.enumeration.YeelightAdjustProperty;
 import com.mollin.yapi.enumeration.YeelightEffect;
 import com.mollin.yapi.enumeration.YeelightProperty;
 import com.mollin.yapi.exception.YeelightResultErrorException;
+import com.mollin.yapi.flow.YeelightFlow;
 import com.mollin.yapi.result.YeelightResultError;
 import com.mollin.yapi.result.YeelightResultOk;
 import com.mollin.yapi.exception.YeelightSocketException;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.mollin.yapi.utils.YeelightUtils.clamp;
+import static com.mollin.yapi.utils.YeelightUtils.clampAndComputeRGBValue;
 
 /**
  * Class controlling a Yeelight device (command sending).
@@ -159,10 +161,7 @@ public class YeelightDevice {
      * @throws YeelightSocketException when socket error occurs
      */
     public void setRGB(int r, int g, int b) throws YeelightResultErrorException, YeelightSocketException {
-        r = clamp(r, 0, 255);
-        g = clamp(g, 0, 255);
-        b = clamp(b, 0, 255);
-        int rgbValue = r * 65536 + g * 256 + b;
+        int rgbValue = clampAndComputeRGBValue(r, g, b);
         YeelightCommand command = new YeelightCommand("set_rgb", rgbValue, this.effect.getValue(), this.duration);
         this.sendCommand(command);
     }
@@ -223,6 +222,27 @@ public class YeelightDevice {
      */
     public void setDefault() throws YeelightResultErrorException, YeelightSocketException {
         YeelightCommand command = new YeelightCommand("set_default");
+        this.sendCommand(command);
+    }
+
+    /**
+     * Start a flow
+     * @param flow Flow to start
+     * @throws YeelightResultErrorException when command result is an error
+     * @throws YeelightSocketException when socket error occurs
+     */
+    public void startFlow(YeelightFlow flow) throws YeelightResultErrorException, YeelightSocketException {
+        YeelightCommand command = new YeelightCommand("start_cf", flow.createCommandParams());
+        this.sendCommand(command);
+    }
+
+    /**
+     * Stop a flow
+     * @throws YeelightResultErrorException when command result is an error
+     * @throws YeelightSocketException when socket error occurs
+     */
+    public void stopFlow() throws YeelightResultErrorException, YeelightSocketException {
+        YeelightCommand command = new YeelightCommand("stop_cf");
         this.sendCommand(command);
     }
 
