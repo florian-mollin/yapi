@@ -4,7 +4,12 @@ import com.mollin.yapi.command.YeelightCommand;
 import com.mollin.yapi.enumeration.YeelightAdjustAction;
 import com.mollin.yapi.enumeration.YeelightAdjustProperty;
 import com.mollin.yapi.enumeration.YeelightEffect;
-import com.mollin.yapi.enumeration.YeelightProperty;
+import com.mollin.yapi.enumeration.YeelightFlowAction;
+import com.mollin.yapi.flow.YeelightFlow;
+import com.mollin.yapi.flow.transition.YeelightColorTemperatureTransition;
+import com.mollin.yapi.flow.transition.YeelightColorTransition;
+import com.mollin.yapi.flow.transition.YeelightSleepTransition;
+import com.mollin.yapi.flow.transition.YeelightTransition;
 import com.mollin.yapi.socket.YeelightSocketHolder;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -82,6 +87,21 @@ public class YeelightDeviceTest {
         paramsList.add(DEFAULT_DEVICE_EFFECT.getValue());
         paramsList.add(DEFAULT_DEVICE_DURATION);
         return new YeelightCommand(method, paramsList.toArray());
+    }
+
+    /**
+     * Create flow with its transitions
+     * @param count Number of times to run the flow
+     * @param action Action after flow stops
+     * @param transitions Transitions to add to flow
+     * @return Constructed flow
+     */
+    private static YeelightFlow createFlowWithTransitions(int count, YeelightFlowAction action, YeelightTransition... transitions) {
+        YeelightFlow flow = new YeelightFlow(count, action);
+        for (YeelightTransition transition : transitions) {
+            flow.getTransitions().add(transition);
+        }
+        return flow;
     }
 
     public Object[] parametersForSetColorTemperatureTest() {
@@ -208,6 +228,57 @@ public class YeelightDeviceTest {
     public void setDefaultTest(YeelightCommand expectedSentCommand) throws Exception {
         YeelightDevice device = createTestingDevice(expectedSentCommand);
         device.setDefault();
+    }
+
+    public Object[] parametersForStartFlowTest() {
+        String method = "start_cf";
+        YeelightColorTransition colorTransition = new YeelightColorTransition(40, 80, 150, 500, 90);
+        String colorTransitionTuple = "500,1,2642070,90";
+        YeelightColorTemperatureTransition colorTempTransition = new YeelightColorTemperatureTransition(5000, 750, 42);
+        String colorTempTransitionTuple = "750,2,5000,42";
+        YeelightSleepTransition sleepTransition = new YeelightSleepTransition(1000);
+        String sleepTransitionTuple = "1000,7,0,1";
+        return new Object[][] {
+                {
+                    createFlowWithTransitions(1, YeelightFlowAction.RECOVER, colorTransition),
+                    new YeelightCommand(method, 1, 0, colorTransitionTuple)
+                },
+                {
+                    createFlowWithTransitions(2, YeelightFlowAction.STAY, colorTempTransition),
+                    new YeelightCommand(method, 2, 1, colorTempTransitionTuple)
+                },
+                {
+                    createFlowWithTransitions(3, YeelightFlowAction.TURN_OFF, sleepTransition),
+                    new YeelightCommand(method, 3, 2, sleepTransitionTuple)
+                },
+                {
+                    createFlowWithTransitions(4, YeelightFlowAction.RECOVER, colorTransition, colorTempTransition, sleepTransition),
+                    new YeelightCommand(method, 12, 0, colorTransitionTuple + "," + colorTempTransitionTuple + "," + sleepTransitionTuple)
+                }
+        };
+    }
+
+    @Test
+    @Parameters
+    @PrepareForTest(YeelightDevice.class)
+    public void startFlowTest(YeelightFlow flow, YeelightCommand expectedSentCommand) throws Exception {
+        YeelightDevice device = createTestingDevice(expectedSentCommand);
+        device.startFlow(flow);
+    }
+
+    public Object[] parametersForStopFlowTest() {
+        String method = "stop_cf";
+        return new Object[][] {
+                {new YeelightCommand(method)}
+        };
+    }
+
+    @Test
+    @Parameters
+    @PrepareForTest(YeelightDevice.class)
+    public void stopFlowTest(YeelightCommand expectedSentCommand) throws Exception {
+        YeelightDevice device = createTestingDevice(expectedSentCommand);
+        device.stopFlow();
     }
 
     public Object[] parametersForAddCronTest() {
