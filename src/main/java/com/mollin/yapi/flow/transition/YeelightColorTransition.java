@@ -28,7 +28,7 @@ public class YeelightColorTransition extends YeelightTransition {
      * @param r Red value [0;255]
      * @param g Green value [0;255]
      * @param b Blue value [0;255]
-     * @param duration Transition duration (ms) (>=50)
+     * @param duration Transition duration (ms) (&gt;=50)
      * @param brightness Brightness value [1;100]
      */
     public YeelightColorTransition(int r, int g, int b, int duration, int brightness) {
@@ -40,11 +40,11 @@ public class YeelightColorTransition extends YeelightTransition {
 
     /**
      * Color transition constructor
-     * @see YeelightColorTransition#YeelightColorTransition(int, int, int, int, int). Brightness is 100
+     * @see YeelightColorTransition#YeelightColorTransition(int, int, int, int, int) . Brightness is 100
      * @param r Red value [0;255]
      * @param g Green value [0;255]
      * @param b Blue value [0;255]
-     * @param duration Transition duration (ms) (>=50)
+     * @param duration Transition duration (ms) (&gt;=50)
      */
     public YeelightColorTransition(int r, int g, int b, int duration) {
         this(r, g, b, duration, 100);

@@ -80,7 +80,7 @@ public class YeelightDevice {
 
     /**
      * Setter for Yeelight device effect duration
-     * @param duration Duration to set (>= 0)
+     * @param duration Duration to set (&gt;= 0)
      */
     public void setDuration(int duration) {
         this.duration = Math.max(0, duration);
@@ -124,7 +124,7 @@ public class YeelightDevice {
     /**
      * Retrieve properties of device
      * @param properties Required properties (if no property is specified, all properties are retrieve)
-     * @return Required properties map (Property --> string value)
+     * @return Required properties map (Property → string value)
      * @throws YeelightResultErrorException when command result is an error
      * @throws YeelightSocketException when socket error occurs
      */
@@ -248,7 +248,7 @@ public class YeelightDevice {
 
     /**
      * Start a power off device timer
-     * @param delay Timer delay in minutes (>= 0)
+     * @param delay Timer delay in minutes (&gt;= 0)
      * @throws YeelightResultErrorException when command result is an error
      * @throws YeelightSocketException when socket error occurs
      */

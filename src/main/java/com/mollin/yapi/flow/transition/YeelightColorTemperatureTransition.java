@@ -26,7 +26,7 @@ public class YeelightColorTemperatureTransition extends YeelightTransition {
     /**
      * Color temperature transition constructor
      * @param colorTemp Color temperature value [1700;6500]
-     * @param duration Transition duration (ms) (>=50)
+     * @param duration Transition duration (ms) (&gt;=50)
      * @param brightness Brightness value [1;100]
      */
     public YeelightColorTemperatureTransition(int colorTemp, int duration, int brightness) {
@@ -38,9 +38,9 @@ public class YeelightColorTemperatureTransition extends YeelightTransition {
 
     /**
      * Color temperature transition constructor
-     * @see YeelightColorTemperatureTransition#YeelightColorTemperatureTransition(int, int, int). Brightness is 100
+     * @see YeelightColorTemperatureTransition#YeelightColorTemperatureTransition(int, int, int) . Brightness is 100
      * @param colorTemp Color temperature value [1700;6500]
-     * @param duration Transition duration (ms) (>=50)
+     * @param duration Transition duration (ms) (&gt;=50)
      */
     public YeelightColorTemperatureTransition(int colorTemp, int duration) {
         this(colorTemp, duration, 100);

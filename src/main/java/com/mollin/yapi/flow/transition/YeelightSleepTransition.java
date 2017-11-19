@@ -23,7 +23,7 @@ public class YeelightSleepTransition extends YeelightTransition {
 
     /**
      * Sleep transition constructor
-     * @param duration Transition duration (ms) (>=50)
+     * @param duration Transition duration (ms) (&gt;=50)
      */
     public YeelightSleepTransition(int duration) {
         this.duration = clampDuration(duration);
