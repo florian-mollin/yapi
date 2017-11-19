@@ -1,7 +1,10 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'java'
+}
+
 group 'com.mollin.yapi'
 version '0.1'
-
-apply plugin: 'java'
 
 sourceCompatibility = 1.8
 
@@ -50,4 +53,5 @@ task generateJars() {
     dependsOn 'jar'
     dependsOn 'sourcesJar'
     dependsOn 'javadocJar'
+    dependsOn 'shadowJar'
 }
