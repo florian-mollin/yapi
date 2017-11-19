@@ -36,9 +36,41 @@ public class YeelightFlow {
      * @param action Action after flow stops
      */
     public YeelightFlow(int count, YeelightFlowAction action) {
-        this.count = Math.max(0, count);
-        this.action = action == null ? YeelightFlowAction.RECOVER : action;
+        this.setCount(count);
+        this.setAction(action);
         this.transitions = new ArrayList<>();
+    }
+
+    /**
+     * Getter for count (Number of times to run this flow)
+     * @return Count
+     */
+    public int getCount() {
+        return this.count;
+    }
+
+    /**
+     * Setter for count (Number of times to run this flow)
+     * @param count Number of times to run this flow
+     */
+    public void setCount(int count) {
+        this.count = Math.max(0, count);
+    }
+
+    /**
+     * Getter for flow action (Action after flow stops)
+     * @return Action
+     */
+    public YeelightFlowAction getAction() {
+        return this.action;
+    }
+
+    /**
+     * Setter for flow action (Action after flow stops)
+     * @param action Action after flow stops
+     */
+    public void setAction(YeelightFlowAction action) {
+        this.action = action == null ? YeelightFlowAction.RECOVER : action;
     }
 
     /**
