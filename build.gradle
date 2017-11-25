@@ -50,6 +50,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 task generateJars() {
+    dependsOn 'check'
     dependsOn 'jar'
     dependsOn 'sourcesJar'
     dependsOn 'javadocJar'
