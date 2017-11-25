@@ -44,3 +44,7 @@ gradle-app.setting
 
 ### IntelliJ ###
 .idea/
+*.iml
+
+### Project specific part ###
+!jar/*.jar
