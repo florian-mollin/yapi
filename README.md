@@ -2,7 +2,7 @@
 Yapi is an API that lets you control different Yeelight devices via Wi-Fi.
 
 ## Get Yapi
-*In progress...*
+To use Yapi, you can download the JAR [here](jar/) (*Java 8 or above is required*).
 
 
 ## Usage / Example
@@ -17,4 +17,4 @@ device.setRGB(255, 126, 0);
 // Change device brightness
 device.setBrightness(100);
 ```
-For a complete overview of available commands, see the API documentation.
+For a complete overview of available commands, see the [API documentation](https://github.com/florian-mollin/yapi/wiki).
