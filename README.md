@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/florian-mollin/yapi.svg?branch=master)](https://travis-ci.org/florian-mollin/yapi)
+
 # Yapi : Yeelight Java API
 Yapi is an API that lets you control different Yeelight devices via Wi-Fi.
 
