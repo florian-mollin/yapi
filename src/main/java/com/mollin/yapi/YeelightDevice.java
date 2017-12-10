@@ -33,7 +33,7 @@ public class YeelightDevice {
      */
     private YeelightEffect effect;
     /**
-     * Device effect duration setting for commands
+     * Device effect duration setting for commands (ms)
      */
     private int duration;
 
@@ -42,7 +42,7 @@ public class YeelightDevice {
      * @param ip Yeelight device IP
      * @param port Yeelight device port
      * @param effect Device effect setting for commands
-     * @param duration Device effect duration setting for commands
+     * @param duration Device effect duration setting for commands (ms)
      * @throws YeelightSocketException when a socket error occurs
      */
     public YeelightDevice(String ip, int port, YeelightEffect effect, int duration) throws YeelightSocketException {
@@ -79,7 +79,7 @@ public class YeelightDevice {
     }
 
     /**
-     * Setter for Yeelight device effect duration
+     * Setter for Yeelight device effect duration (ms)
      * @param duration Duration to set (&gt;= 0)
      */
     public void setDuration(int duration) {
