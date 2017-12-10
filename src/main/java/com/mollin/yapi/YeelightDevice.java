@@ -284,9 +284,9 @@ public class YeelightDevice {
     }
 
     /**
-     * Adjust some parameters. (Main used by controllers)
-     * @param property Property to adjust (if null, Circle chosen)
-     * @param action Direction of adjustment (if null, Color chose). For property {@link YeelightAdjustProperty#COLOR}, action can only be {@link YeelightAdjustAction#CIRCLE}
+     * Adjust a property. (Main used by controllers)
+     * @param property Property to adjust (if null, Color chosen)
+     * @param action Direction of adjustment (if null, Circle chose). For property {@link YeelightAdjustProperty#COLOR}, action can only be {@link YeelightAdjustAction#CIRCLE}
      * @throws YeelightResultErrorException when command result is an error
      * @throws YeelightSocketException when socket error occurs
      */
