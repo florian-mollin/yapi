@@ -18,5 +18,11 @@ device.setPower(true);
 device.setRGB(255, 126, 0);
 // Change device brightness
 device.setBrightness(100);
+
+// Discover and instantiate devices
+ArrayList<YeelightDevice> devices = new ArrayList<>();
+for(YeelightDeviceMeta meta : YeelightDiscoveryManager.search()) {
+    devices.add(new YeelightDevice(meta));
+}
 ```
 For a complete overview of available commands, see the [API documentation](https://github.com/florian-mollin/yapi/wiki).
